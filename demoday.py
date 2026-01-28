@@ -35,7 +35,7 @@ st.markdown(
     """
     <h1 style='text-align: center;'> Smart Offhore Design Platform</h1>
     <h4 style='text-align: center; color: gray;'>
-    Reducing cost & risk for floating offshore wind
+    Optimising cost & risk for floating offshore wind
     </h4>
     """,
     unsafe_allow_html=True
@@ -43,12 +43,12 @@ st.markdown(
 st.divider()
 
 st.markdown("""
-Welcome to the Mooring System Optimization Platform.
+Welcome to the Mooring System Optimisation Platform.
 
 To begin, please:
 1. Define the ranges for your decision variables using the panel on the left.
 2. Upload your dataset used to train the surrogate model.
-3. Click 'Run Optimization' to execute the optimization and view results.
+3. Click 'Run Optimisation' to execute the optimisation and view results.
 """)
 
 # --------------------------------------------------
@@ -156,9 +156,9 @@ if uploaded_file is not None:
     # --------------------------------------------------
     # RUN OPTIMIZATION
     # --------------------------------------------------
-    st.subheader(" Run Optimization")
+    st.subheader(" Run Optimisation")
 
-    if st.button("Run Optimization"):
+    if st.button("Run Optimisation"):
         with st.spinner("SOD is exploring thousands of designs..."):
 
             problem = FloatingWindTurbineProblem()
@@ -188,7 +188,7 @@ if uploaded_file is not None:
                 save_history=True
             )
 
-        st.success(" Optimization completed")
+        st.success(" Optimisation completed")
 
 
         # -------------------------------
@@ -288,7 +288,7 @@ if uploaded_file is not None:
                 updatemenus=[{
                     "type": "buttons",
                     "buttons": [{
-                        "label": "▶ Play Optimization",
+                        "label": "▶ Play Optimisation",
                         "method": "animate",
                         "args": [None, {
                             "frame": {"duration": 500, "redraw": True},
@@ -351,7 +351,7 @@ if uploaded_file is not None:
         n_generations = len(res.history)
         n_scenarios = sum(len(h.pop) for h in res.history)
 
-        st.subheader(" Optimization Summary")
+        st.subheader(" Optimisation Summary")
 
         c1, c2, c3 = st.columns(3)
         c1.metric("Scenarios Evaluated", f"{n_scenarios:,}")
@@ -420,7 +420,7 @@ if uploaded_file is not None:
 
 
 
-        st.subheader(" Cost Reduction Over Optimization")
+        st.subheader(" Cost Reduction Over Optimisation")
 
         conv_df = pd.DataFrame({
             "Generation": range(len(callback.data["best_cost"])),

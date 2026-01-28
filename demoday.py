@@ -33,7 +33,7 @@ st.set_page_config(layout="wide")
 
 st.markdown(
     """
-    <h1 style='text-align: center;'> Smart Offhore Design Platform</h1>
+    <h1 style='text-align: center;'> Smart Offshore Design Platform</h1>
     <h4 style='text-align: center; color: gray;'>
     Optimising cost & risk for floating offshore wind
     </h4>
@@ -43,11 +43,11 @@ st.markdown(
 st.divider()
 
 st.markdown("""
-Welcome to the Mooring System Optimisation Platform.
+Welcome to the Smart Offshore Design Platform(SOD).
 
 To begin, please:
 1. Define the ranges for your decision variables using the panel on the left.
-2. Upload your dataset used to train the surrogate model.
+2. Upload your dataset to train the surrogate model.
 3. Click 'Run Optimisation' to execute the optimisation and view results.
 """)
 
@@ -73,7 +73,7 @@ param_ranges = {
 st.subheader("📂 Upload Dataset")
 
 uploaded_file = st.file_uploader(
-    "Upload CSV dataset used to train the surrogate model",
+    "Upload CSV dataset to train the surrogate model",
     type=["csv"]
 )
 
@@ -220,7 +220,7 @@ if uploaded_file is not None:
         import plotly.graph_objects as go
        
 
-        st.subheader(" How the SOD Explores the Decision Variables")
+        st.subheader(" Decision Variables")
 
         frames = []
 
@@ -268,7 +268,7 @@ if uploaded_file is not None:
             data=frames[0].data,
             frames=frames,
             layout=go.Layout(
-                title="SOD Exploring 4-D Decision Variables",
+                title="SOD Exploring a Large 4-D Decision Variable Space",
                 height=600,
                 scene=dict( aspectmode="cube",
                     xaxis=dict(
@@ -308,7 +308,7 @@ if uploaded_file is not None:
         # -------------------------------
 
 
-        st.subheader(" How the SOD Explores the Design Space")
+        st.subheader(" Design Space")
 
         frames = []
         all_points = []
@@ -326,10 +326,10 @@ if uploaded_file is not None:
             df_anim,
             x="Cost",
             y="X-Offset",
-            animation_frame="Generation",
+            animation_frame="Iterations",
             range_x=[df_anim["Cost"].min()*0.95, df_anim["Cost"].max()*1.05],
             range_y=[df_anim["X-Offset"].min()*0.95, df_anim["X-Offset"].max()*1.05],
-            title="SOD Exploring Mooring Designs Over Time",
+            title="SOD Navigating Mooring Designs Over Optimisation Iterations",
             labels={"X-Offset": "Platform Offset (m)"},
         )
 
@@ -356,7 +356,7 @@ if uploaded_file is not None:
         c1, c2, c3 = st.columns(3)
         c1.metric("Scenarios Evaluated", f"{n_scenarios:,}")
         c2.metric("Iterations", n_generations)
-        c3.metric("Scenarios per Iterations", algorithm.pop_size)
+        c3.metric("Scenarios per Iteration", algorithm.pop_size)
 
         # --------------------------------------------------
         # RESULTS
@@ -370,7 +370,7 @@ if uploaded_file is not None:
         st.subheader(" Best Design Found")
 
         c1, c2 = st.columns(2)
-        c1.metric("Minimum Cost", f"${best['Cost']:,.0f}")
+        c1.metric("Lowest Cost", f"${best['Cost']:,.0f}")
         c2.metric("Platform Offset", f"{best['X-Offset']:.2f} m")
 
         baseline_cost = 1_250_000  # example baseline
@@ -384,7 +384,7 @@ if uploaded_file is not None:
         # --------------------------------------------------
         # PARETO FRONT
         # --------------------------------------------------
-        st.subheader(" Cost vs Performance Trade-Off")
+        st.subheader(" Cost vs Performance Trade-off")
 
         fig = px.scatter(
             df_results,
@@ -392,7 +392,7 @@ if uploaded_file is not None:
             y="X-Offset",
             color="Cost",
             color_continuous_scale="Viridis",
-            title="Pareto-Optimal Mooring Designs"
+            title="SOD Providing Pareto-optimal Mooring Designs"
         )
 
         fig.update_traces(marker=dict(size=10))
@@ -400,27 +400,11 @@ if uploaded_file is not None:
 
         st.plotly_chart(fig, use_container_width=True)
 
-        # --------------------------------------------------
-        # CONVERGENCE
-        # --------------------------------------------------
-        # conv_df = pd.DataFrame({
-        #     "Generation": range(len(callback.data["best_cost"])),
-        #     "Best Cost": callback.data["best_cost"]
-        # })
-
-        # fig2 = px.line(
-        #     conv_df,
-        #     x="Generation",
-        #     y="Best Cost",
-        #     title="Optimization Convergence"
-        # )
-
-        # fig2.update_layout(template="plotly_white")
-        # st.plotly_chart(fig2, use_container_width=True)
 
 
 
-        st.subheader(" Cost Reduction Over Optimisation")
+
+        st.subheader(" Cost Reduction ")
 
         conv_df = pd.DataFrame({
             "Generation": range(len(callback.data["best_cost"])),
@@ -432,7 +416,7 @@ if uploaded_file is not None:
             x="Generation",
             y="Best Cost",
             markers=True,
-            title="SOD Converging Toward Lower-Cost Designs"
+            title="SOD Converging Toward Lower-cost Designs"
         )
 
         fig.update_layout(template="plotly_white", height=400)
@@ -440,40 +424,6 @@ if uploaded_file is not None:
 
 
 
-        # st.subheader("⚓ Visualizing the Optimized Mooring Configuration")
-
-        # best_x = res.X[df_results["Cost"].idxmin()]
-
-        # chain_length = best_x["Chain_lengths"]
-        # buoy_dist = best_x["Buoy_Hull_Distances"]
-
-        # fig = go.Figure()
-
-        # fig.add_trace(go.Scatter(
-        #     x=[0, 0],
-        #     y=[0, chain_length],
-        #     mode="lines",
-        #     line=dict(width=6),
-        #     name="Mooring Line"
-        # ))
-
-        # fig.add_trace(go.Scatter(
-        #     x=[0],
-        #     y=[chain_length - buoy_dist],
-        #     mode="markers",
-        #     marker=dict(size=20),
-        #     name="Buoy"
-        # ))
-
-        # fig.update_layout(
-        #     title="Optimized Mooring Geometry (Conceptual)",
-        #     yaxis=dict(title="Depth (m)", autorange="reversed"),
-        #     xaxis=dict(visible=False),
-        #     height=500,
-        #     template="plotly_white"
-        # )
-
-        # st.plotly_chart(fig, use_container_width=True)
 
 
 

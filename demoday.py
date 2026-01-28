@@ -326,7 +326,7 @@ if uploaded_file is not None:
             df_anim,
             x="Cost",
             y="X-Offset",
-            animation_frame="Iterations",
+            animation_frame="Generation",
             range_x=[df_anim["Cost"].min()*0.95, df_anim["Cost"].max()*1.05],
             range_y=[df_anim["X-Offset"].min()*0.95, df_anim["X-Offset"].max()*1.05],
             title="SOD Navigating Mooring Designs Over Optimisation Iterations",
